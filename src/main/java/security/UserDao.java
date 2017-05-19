@@ -1,13 +1,13 @@
 package security;
 
-import error.Errors;
+
+import entity.InternalError;
+import security.entity.Role;
 import security.entity.User;
 
-import java.sql.SQLException;
+import java.util.List;
 
-
-//data Access Object - механизм доступа к объектам данных
 public interface UserDao {
-    User getUserByUsername(String username);
-    void setNewUser(User user) throws SQLException;
+    User getUserByUsername(String username, InternalError internalError);
+    void addNewUser (User user, List<Role> roles, InternalError internalError);
 }

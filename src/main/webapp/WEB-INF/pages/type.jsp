@@ -1,9 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Каталог</title>
+    <title>Тип</title>
     <script src='${pageContext.request.contextPath}/js/jquery-1.4.2.min.js' type='text/javascript'></script>
-    <script src='${pageContext.request.contextPath}/js/catalog.js' type='text/javascript'></script>
+    <script src='${pageContext.request.contextPath}/js/type.js' type='text/javascript'></script>
 </head>
 <body>
 
@@ -12,6 +12,8 @@
     var hierarchyId='${param.hierarchyId}';
 
 </script>
+
+<a href="?hierarchyId=${param.hierarchyId}&lang=en">English</a> | <a href="?hierarchyId=${param.hierarchyId}&lang=ru">Russian</a>
 
     <div id="error"></div>
 

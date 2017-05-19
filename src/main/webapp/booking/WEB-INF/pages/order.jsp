@@ -12,8 +12,14 @@
 
     <c:if test="${pageContext.request.remoteUser != null}">
         <div>${pageContext.request.remoteUser}</div>
-        <div id="user"><a href="#" onclick="document.getElementById('logoutForm').submit();"><spring:message code="Logout" text="Logout" /></a></div>
+        <div id="user"><a href="#" onclick="document.getElementById('logoutForm').submit();">
+            <spring:message code="Logout" text="Logout" /></a></div>
     </c:if>
+
+
+    <form id="logoutForm" action="<c:url value="/j_spring_security_logout"/>" method="post">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+    </form>
 
 </body>
 </html>

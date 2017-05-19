@@ -1,6 +1,5 @@
 package security;
 
-import error.Errors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -9,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import security.entity.Role;
+import entity.InternalError;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,18 +20,26 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try{
-            security.entity.User username1 = getUserDao().getUserByUsername(username);
-            Set<GrantedAuthority> authorities = getAuthorities(username1.getRoles());
 
+            InternalError internalError = new InternalError();
 
-            User user = new User(username1.getLogin(),
-                            username1.getPassword(),
-                            username1.getActive(),
-                            username1.getAccountNonExpired(),
-                            username1.getCredentialsNonExpired(),
-                            username1.getAccountNonLocked(),
-                            authorities
-                    );
+            security.entity.User username1 = getUserDao().getUserByUsername(username, internalError);
+
+            User user = null;
+
+            if (username1 != null){
+                Set<GrantedAuthority> authorities = getAuthorities(username1.getRoles());
+
+                user = new User(username1.getLogin(),
+                        username1.getPassword(),
+                        username1.getActive(),
+                        username1.getAccountNonExpired(),
+                        username1.getCredentialsNonExpired(),
+                        username1.getAccountNonLocked(),
+                        authorities
+                );
+            }
+
             return user;
         }
         catch (Exception exception){

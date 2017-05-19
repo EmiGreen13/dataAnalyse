@@ -1,74 +1,145 @@
 package security;
 
-import error.Errors;
+import entity.InternalError;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import security.entity.Role;
 import security.entity.User;
-import javax.persistence.*;
-import java.sql.SQLException;
+
+import javax.sql.DataSource;
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
+import java.sql.Types;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Repository
 public class UserDaoManager implements UserDao {
 
-    protected EntityManagerFactory entityManagerFactory;
+    @Autowired
+    private DataSource dataSource;
 
-    public User getUserByUsername(String username){
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public User getUserByUsername(String username, InternalError internalError){
         User user = null;
+        Set<Role> roles = null;
         try{
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            StoredProcedureQuery query = entityManager.createStoredProcedureQuery("security.getUserByUsername", User.class);
-            query.registerStoredProcedureParameter(1, String.class, ParameterMode.IN);
-
-            query.setParameter(1, username);
-
-            query.execute();
+            CallableStatement call = dataSource.getConnection().prepareCall("{ call dataanalyse.spGetUserByUsername(?,?,?) }", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            call.setObject(1, username, Types.VARCHAR);
+            call.registerOutParameter(2, Types.INTEGER);
+            call.registerOutParameter(3, Types.NVARCHAR);
 
 
-            user = (User)query.getResultList().get(0);
+            Boolean result = call.execute();
 
-            entityManager.close();
+            if (result){
+                //Prepare result set
+                ResultSet resultSet = call.getResultSet();
+                //row count
+                resultSet.last();
+
+                int count = resultSet.getRow();
+
+                //set first value
+                resultSet.first();
+                user = new User(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3), resultSet.getString(4), resultSet.getBoolean(5), resultSet.getBoolean(6), resultSet.getBoolean(7), resultSet.getBoolean(8));
+
+                //set before first position
+                resultSet.beforeFirst();
+
+                roles = new HashSet<>(count);
+
+                while (resultSet.next()) {
+                    roles.add(new Role(resultSet.getInt(1), resultSet.getString(9)));
+                }
+
+                user.setRoles(roles);
+            }
+            //Output parameters
+            Integer error = call.getInt(2);
+            String errorMessage = call.getString(3);
+
+            //if error occurs
+            if (error != 0) {
+                user = null;
+                internalError.setErrorNumber(error);
+                internalError.setErrorMessage(errorMessage);
+            }
         }
         catch (Exception exception){
             user = null;
+            internalError.setErrorMessage(exception.getLocalizedMessage());
+            internalError.setErrorNumber(exception.hashCode());
         }
 
         return user;
     }
 
     @Override
-    public void setNewUser(User user) throws SQLException{
+    public void addNewUser(User user, List<Role> roles, InternalError internalError) {
+
         try{
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            StoredProcedureQuery query = entityManager.createStoredProcedureQuery("security.setUser", User.class);
+            CallableStatement call = dataSource.getConnection().prepareCall("{ call dataanalyse.spAddNewUser(?,?,?,?,?,?,?,?,?,?) }", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
-            String errorMessage = "";
+            call.registerOutParameter(1, Types.INTEGER);
+            call.setObject(2, user.getLogin(), Types.VARCHAR);
+            call.setObject(3, user.getPassword(), Types.VARCHAR);
+            call.setObject(4, user.getEmail(), Types.VARCHAR);
+            call.setObject(5, user.getActive(), Types.BIT);
+            call.setObject(6, user.getAccountNonExpired(), Types.BIT);
+            call.setObject(7, user.getCredentialsNonExpired(), Types.BIT);
+            call.setObject(8, user.getAccountNonLocked(), Types.BIT);
+            call.registerOutParameter(9, Types.INTEGER);
+            call.registerOutParameter(10, Types.NVARCHAR);
 
-            query.registerStoredProcedureParameter(1, String.class, ParameterMode.IN);
-            query.registerStoredProcedureParameter(2, String.class, ParameterMode.IN);
-            query.registerStoredProcedureParameter(3, String.class, ParameterMode.IN);
-            query.registerStoredProcedureParameter(4, String.class, ParameterMode.INOUT);
+            call.execute();
 
-            query.setParameter(1, user.getLogin());
-            query.setParameter(2, user.getPassword());
-            query.setParameter(3, user.getEmail());
+            Integer error = call.getInt(9);
+            String errorMessage = call.getString(10);
 
+            //if error occurs
+            if (error != 0) {
+                internalError.setErrorNumber(error);
+                internalError.setErrorMessage(errorMessage);
+            }
+            else{
+                Integer userId = call.getInt(1);
 
-            query.execute();
+                CallableStatement callRole = dataSource.getConnection().prepareCall("{ call dataanalyse.spAddNewUserRole(?,?,?,?) }", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
-            errorMessage = (String) query.getOutputParameterValue(4);
+                for(int index = 0; index < roles.size(); index++){
+                    callRole.setObject(1, userId, Types.INTEGER);
+                    callRole.setObject(2, roles.get(index).getRole(), Types.VARCHAR);
+                    callRole.registerOutParameter(3, Types.INTEGER);
+                    callRole.registerOutParameter(4, Types.NVARCHAR);
 
-            if(errorMessage == null || errorMessage.length() > 0){
-                throw new Exception(errorMessage);
+                    callRole.execute();
+
+                    error = callRole.getInt(3);
+                    errorMessage = callRole.getString(4);
+
+                    if(error != 0){
+                        break;
+                    }
+                }
             }
 
-            entityManager.close();
+            if (error != 0) {
+                internalError.setErrorNumber(error);
+                internalError.setErrorMessage(errorMessage);
+            }
+
+
         }
         catch (Exception exception){
-            throw new SQLException(exception.getMessage());
+            user = null;
+            internalError.setErrorMessage(exception.getLocalizedMessage());
+            internalError.setErrorNumber(exception.hashCode());
         }
-    }
 
-    @PersistenceUnit(unitName = "myEmfSecurity")
-    public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
-        this.entityManagerFactory = entityManagerFactory;
     }
 }

@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Locale;
 
 @RestController
-@RequestMapping(value = "/load_catalogs")
-public class AsyncLoadHierarchyCatalog extends AsyncBaseHierarchyController {
+@RequestMapping(value = "/load_type")
+public class AsyncLoadHierarchyType extends AsyncBaseHierarchyController {
 
 
     protected HierarchyDao hierarchyDao;

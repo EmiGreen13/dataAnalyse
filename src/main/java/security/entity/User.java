@@ -1,52 +1,26 @@
 package security.entity;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-
-import javax.persistence.*;
+import security.HashPassword;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Entity(name = "User")
-@Table(name = "tblUser")
 public class User {
-    @Id
-    @Column(name = "UserId", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name = "Login", length = 50, nullable = false, unique = true)
     private String login;
-    @Column(name = "Password", length = 100, nullable = false)
     private String password;
-    @Column(name = "Email", length = 50, nullable = false)
     private String email;
-    @Column(name = "accountNonExpired", columnDefinition="bool default '1'", nullable = false)
     private Boolean accountNonExpired;
-    @Column(name = "credentialsNonExpired", columnDefinition="bool default '1'", nullable = false)
     private Boolean credentialsNonExpired;
-    @Column(name = "accountNonLocked", columnDefinition="bool default '0'", nullable = false)
     private Boolean accountNonLocked;
-    @Column(name = "Active", columnDefinition="bool default '1'", nullable = false)
     private Boolean active;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    private static final Boolean credentialsIsNonExpired = true;
+    private static final Boolean accountIsNonLocked = true;
+    private static final Boolean isActive = true;
+    private static final Boolean accountIsNonExpired = true;
+
     private Set<Role> roles;
-
-    private static final String loginPattern = "";
-
-
-    public static Boolean isValidParameters(String username, String password1, String password2, String email){
-        Boolean result = true;
-
-        try{
-
-        }
-        catch (Exception exception){
-            result = false;
-        }
-        return result;
-    }
-
 
     public User(){}
 
@@ -105,15 +79,33 @@ public class User {
         this.setAccountNonLocked(accountNonLocked);
     }
 
+
+
+    public static User validUser(String login, String password1, String password2, String email)throws Exception{
+
+        User user = null;
+        if(isValidLogin(login) && isValidPassword(password1, password2) && isValidEmail(email)){
+            user = new User(
+                    login,
+                    HashPassword.getHashPassword(password1),
+                    email,
+                    isActive,
+                    accountIsNonExpired,
+                    credentialsIsNonExpired,
+                    accountIsNonLocked
+                    );
+        }
+
+        return user;
+    }
+
     public static Boolean isValidLogin(String login){
         Boolean result = false;
-
         if (login != null || (login.length() > 0 && login.length() < 50) ){
             Pattern pattern = Pattern.compile("^[A-Za-z0-9_-]{5,50}$");
             Matcher matcher = pattern.matcher(login);
             result = matcher.matches();
         }
-
         return result;
     }
 
@@ -131,6 +123,16 @@ public class User {
             }
         }
 
+        return result;
+    }
+
+    public static Boolean isValidEmail(String email){
+        Boolean result = true;
+        if (email != null || (email.length() > 0 && email.length() < 50) ){
+//            Pattern pattern = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\\\.[A-Za-z]{2,6}$");
+//            Matcher matcher = pattern.matcher(email);
+//            result = matcher.matches();
+        }
         return result;
     }
 

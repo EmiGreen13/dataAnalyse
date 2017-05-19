@@ -7,7 +7,7 @@ $(document).ready(function() {
 
     $.ajax({
         type: 'GET',
-        url: 'load_product',
+        url: 'load_type',
         data: {'id': id, 'first': first, 'last': last},
         dataType: 'json',
         success: function (result) {
@@ -23,8 +23,8 @@ $(document).ready(function() {
 });
 
 
-function setType(product){
-    for(var i = 0; i < product.length; i++){
-        $("#product").append('<li><a href="product?hierarchyId=' + product[i]['hierarchyId'] + '" id="hierarchy' + product[i]['hierarchyId'] + '">' + product[i]['description'] + '</a></li>');
+function setType(type){
+    for(var i = 0; i < type.length; i++){
+        $("#type").append('<li><a href="type?hierarchyId=' + type[i]['hierarchyId'] + '" id="hierarchy' + type[i]['hierarchyId'] + '">' + type[i]['description'] + '</a></li>');
     }
 }

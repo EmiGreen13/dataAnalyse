@@ -1,7 +1,12 @@
 package manager;
 
-/**
- * Created by juliana9613 on 31.03.2017.
- */
+
+import entity.Hierarchy;
+import entity.InternalError;
+
+import java.util.List;
+import java.util.Locale;
+
 public interface HierarchyDao {
+    List<Hierarchy> getNextLevel(Integer id, Integer first, Integer last, Locale locale, InternalError outputError);
 }
