@@ -65,6 +65,8 @@ function clearText(field)
         </div>
         
         <div id="header_right">
+            <a href="login">Войти</a>
+            <a href="registration">Регистрация</a>
             <ul id="language">
                 <li><a href="?lang=en"><img src="images/usa.png" alt="English" /></a></li>
                 <li><a href="?lang=ru"><img src="images/Russia.png" alt="Russian" /></a></li>
@@ -140,6 +142,10 @@ function clearText(field)
                 Повторите пароль:
                 <input type="password" name="password2" placeholder="Повторите пароль"  style="width:300px;"  />
 
+                <input type="submit" value="Выполнить">
+
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+
             </div>
             
             <div class="col col_13 checkout">
@@ -205,9 +211,5 @@ function clearText(field)
     </div> <!-- END of footer -->   
    
 </div>
-
-
-
-
 </body>
 </html>

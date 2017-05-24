@@ -70,11 +70,6 @@ function loadCategories(id, selector){
             }
 
         }
-    // }
-    // else{
-    //     $("#hierarchyId" + id.toString()).remove("#hierarchy" + type[i]['hierarchyId']);
-    //     $("#hierarchyId" + id.toString()).attr("expanded", 0);
-    // }
 
 }
 
@@ -83,7 +78,7 @@ function setType(type){
 
         if(type.length > 0){
             for(var i = 0; i < type.length; i++){
-                $("#hierarchy" + type[i]['parentHierarchyId']).append('<li><a href="javascript:void(0);" onclick="loadProducts('+ type[i]['hierarchyId']+ ',' + ("hierarchy" + type[i]['hierarchyId']) + ')" id="hierarchy' + type[i]['hierarchyId'] + '">' + type[i]['description'] + '</a></li>');
+                $("#hierarchy" + type[i]['parentHierarchyId']).append('<li><a href="javascript:void(0);" onclick="loadSubtypes('+ type[i]['hierarchyId']+ ',' + ("hierarchy" + type[i]['hierarchyId']) + ')">' + type[i]['description'] + '</a></li>');
                 $("#hierarchy" + type[i]['parentHierarchyId']).append('<div class="types" id="hierarchy' + type[i]['hierarchyId'] + '"></div>');
             }
         }
@@ -91,7 +86,7 @@ function setType(type){
 
 }
 
-function loadProducts(id, selector){
+function loadSubtypes(id, selector){
 
     if($(selector).attr("expanded") == null) {
         var first = null;
@@ -103,7 +98,7 @@ function loadProducts(id, selector){
             data: {'id': id, 'first': first, 'last': last},
             dataType: 'json',
             success: function (result) {
-                setProduct(result);
+                setSubtype(result);
             },
             error: function (msg) {
                 var error = JSON.parse(msg.responseText);
@@ -126,12 +121,42 @@ function loadProducts(id, selector){
     }
 }
 
-function setProduct(products) {
+function setSubtype(subtypes) {
 
-    for(var i = 0; i < products.length; i++){
+    for(var i = 0; i < subtypes.length; i++){
+        $("#hierarchy" + subtypes[i]['parentHierarchyId']).append('<li><a href="javascript:void(0);" onclick="loadProducts('+ subtypes[i]['hierarchyId']  + ')" id="hierarchy' + subtypes[i]['hierarchyId'] + '">' + subtypes[i]['description'] + '</a></li>');
+    }
+}
 
-        $("#hierarchy" + products[i]['parentHierarchyId']).append('<li><a href="javascript:void(0);" onclick="loadProducts('+ products[i]['hierarchyId']  + ')" id="hierarchy' + products[i]['hierarchyId'] + '">' + products[i]['description'] + '</a></li>');
 
+function loadProducts(id){
+
+        var first = null;
+        var last = null;
+
+        $.ajax({
+            type: 'GET',
+            url: 'load_products',
+            data: {'id': id, 'first': first, 'last': last},
+            dataType: 'json',
+            success: function (result) {
+                setProducts(result);
+            },
+            error: function (msg) {
+                var error = JSON.parse(msg.responseText);
+                alert(error);
+                return false;
+            }
+        });
+
+}
+
+function setProducts(products) {
+
+
+    for(var index = 0; index < products.length; products++){
+        alert(products[index]['content'])
+        $("#content").append(products[index]['content'])
 
     }
 

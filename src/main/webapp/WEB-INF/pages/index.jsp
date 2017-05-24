@@ -177,8 +177,6 @@ ddsmoothmenu.init({
 
                 <div id="catalogs">
 
-
-
                 </div>
 
                 <script src='${pageContext.request.contextPath}/js/index.js' type='text/javascript'></script>

@@ -208,6 +208,10 @@ h6 { font-size: 12px; margin: 0 0 5px; padding: 0; }
 	padding: 2px 0 3px 35px;
 }
 
+#sidebar_menu .subtypes {
+	padding: 2px 0 3px 45px;
+}
+
 /*
 #sidebar_menu li a {
 	font-size: 11px;
@@ -263,6 +267,17 @@ table td { border-bottom: 1px solid #ccc }
 }
 
 #newsletter .subscribebtn{
+	float: right;
+	display: inline-block;
+	padding: 4px 10px;
+	font-size: 12px;
+	font-weight: 700;
+	background: #21bdd0;
+	color: #fff;
+	border: none;
+}
+
+#newsletter .comeIn{
 	float: right;
 	display: inline-block;
 	padding: 4px 10px;
