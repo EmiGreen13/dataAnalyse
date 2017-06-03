@@ -153,10 +153,15 @@ function loadProducts(id){
 
 function setProducts(products) {
 
+    //alert(products[index]['content'])
 
     for(var index = 0; index < products.length; products++){
-        alert(products[index]['content'])
-        $("#content").append(products[index]['content'])
+
+        var x = products[index]['content']
+
+        alert(x)
+
+        $("#content").append('<img src="' + products[index]['content'] + '">')
 
     }
 
