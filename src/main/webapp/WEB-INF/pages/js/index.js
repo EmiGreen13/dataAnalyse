@@ -181,17 +181,6 @@ function setProducts(products) {
 
             product.img = '<a href = "product?productId=' + products[index]["productId"] + '" >' + products[index]['content'] + '</a>';
 
-
-            // obj.description = products[index]['description'];
-            // obj.button = '<input type="button" onclick="addToBasket(' + products[index]["hierarchyId"] + ', product' + products[index]["hierarchyId"] + ')" value="Добавить в корзину">';
-            // obj.input = '<input type="text" value="1" id="product' + products[index]["hierarchyId"] + '">';
-
-            // $("#content").html(obj.img);
-            // $("#content").append('<div>' + obj.description + '</div>');
-            // $("#content").append(obj.button);
-            // $("#content").append(obj.input);
-
-
             $("#content").append('<div class="col col_14 product_gallery">'
                 + product.img
                 + product.h3
