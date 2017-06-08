@@ -32,16 +32,16 @@ public class AsyncAddProductToBasket extends ProcessErrorController {
     ) throws IOException {
 
         Integer exitCode = 0;
-        Integer hirarchyId = null;
-        Integer count = 0;
+        Integer hierarchyId = null;
+        Integer count = 1;
 
         try{
 
             try {
-                hirarchyId = Integer.parseInt(request.getParameter("productId"));
+                hierarchyId = Integer.parseInt(request.getParameter("hierarchyId"));
             }
             catch (NumberFormatException exception){
-                hirarchyId = null;
+                hierarchyId = null;
             }
 
             try {
@@ -53,14 +53,14 @@ public class AsyncAddProductToBasket extends ProcessErrorController {
 
             InternalError internalError = new InternalError();
 
-            Product product = productDao.getProductByProductId(hirarchyId, locale, internalError);
+            Product product = productDao.getProductByProductId(hierarchyId, locale, internalError);
 
             if(product == null || internalError.getErrorNumber() != 0){
                 processInternalErrors(response, internalError);
             }
             else{
                 HttpSession session = request.getSession();
-                Basket basket = (Basket)request.getSession().getAttribute("basket");
+                Basket basket = (Basket)session.getAttribute("basket");
 
                 if(basket != null){
                     if(count != null){
@@ -69,6 +69,19 @@ public class AsyncAddProductToBasket extends ProcessErrorController {
                     else{
                         basket.add(product);
                     }
+                    exitCode = basket.getProducts().size();
+                }
+                else{
+                    Basket basket1 = new Basket();
+                    if(count != null){
+                        basket1.add(product, count);
+                    }
+                    else{
+                        basket1.add(product);
+                    }
+                    session.setAttribute("basket", basket1);
+
+                    exitCode = basket1.getProducts().size();
                 }
             }
         }

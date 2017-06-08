@@ -10,7 +10,7 @@ body {
 	color: #666;
 	font-family: Tahoma, Geneva, sans-serif;
 	font-size: 13px;
-	line-height: 1.4em; 
+	line-height: 1.4em;
 	background-color: #f7f7f7;
 	background-repeat: repeat-x;
 	background-position: top;
@@ -66,7 +66,7 @@ h6 { font-size: 12px; margin: 0 0 5px; padding: 0; }
 	height: 100px;
 }
 
-#templatemo_menu { 
+#templatemo_menu {
 	width: 960px;
 	height: 50px;
 }
@@ -90,7 +90,7 @@ h6 { font-size: 12px; margin: 0 0 5px; padding: 0; }
 }
 
 #sidebar {
-	float: left; 
+	float: left;
 	width: 200px;
 	padding: 20px 30px 0 10px;
 }
@@ -133,18 +133,18 @@ h6 { font-size: 12px; margin: 0 0 5px; padding: 0; }
 	font-size: 12px;
 	padding: 0 5px;
 	font-variant: normal;
-	border: none;	
+	border: none;
 	background: none;
 }
 
 #templatemo_search .sub_btn {
 	float: right;
 	display: block;
- 	height: 34px;
+	height: 34px;
 	width: 30px;
 	cursor: pointer;
 	border: none;
-	background: none;	
+	background: none;
 }
 
 #templatemo_middle h1 {
@@ -212,16 +212,46 @@ h6 { font-size: 12px; margin: 0 0 5px; padding: 0; }
 	padding: 2px 0 3px 45px;
 }
 
+#auth{
+	margin: 0 auto;
+	width: 350px;
+}
+
+#authPanel{
+	padding: 20px 10px 20px;
+}
+
+#authPanel h2 { text-align: center; font-size: 24px; padding-bottom: 10px; border-bottom: 1px solid #ccc; margin-bottom: 20px }
+
+
 /*
 #sidebar_menu li a {
 	font-size: 11px;
 }
 */
-#content h2 { font-size: 24px; padding-bottom: 10px; border-bottom: 1px solid #ccc; margin-bottom: 20px }
+#content h2 { text-align: center; font-size: 24px; padding-bottom: 10px; border-bottom: 1px solid #ccc; margin-bottom: 20px }
 
 table td { border-bottom: 1px solid #ccc }
 
 .checkout input { border: 1px solid #ccc; margin-bottom: 15px; height: 20px; line-height: 18px; 	padding: 3px;}
+
+#auth form input[type=text], #auth form input[type=password], #auth form input[type=email]{
+	width: 340px;
+	height: 30px;
+	margin: 10px 5px;
+}
+
+#auth form input[type=submit]{
+	width: 150px;
+	float: right;
+	height: 30px;
+	margin: 10px 5px;
+}
+
+.toRight{
+	float: right;
+	margin:0;
+}
 
 .faq h3 { font-size: 14px; margin: 30px 0 5px }
 
@@ -248,7 +278,7 @@ table td { border-bottom: 1px solid #ccc }
 .add_to_cart {
 	display: inline-block;
 	padding-right: 30px;
-	background: url(../images/cart.png) no-repeat right center	
+	background: url(../images/cart.png) no-repeat right center
 }
 
 #newsletter {
@@ -320,3 +350,8 @@ table td { border-bottom: 1px solid #ccc }
 .col_23 { width: 620px }
 
 .no_margin_right { margin-right: 0 }
+
+.products{
+	width: 300px;
+	height: 300px;
+}

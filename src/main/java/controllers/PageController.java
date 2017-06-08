@@ -34,6 +34,9 @@ public class PageController {
     @RequestMapping(value = "/product", method = RequestMethod.GET)
     public ModelAndView loadProductPage() { return new ModelAndView("WEB-INF/pages/product"); }
 
+    @RequestMapping(value = "/basket", method = RequestMethod.GET)
+    public ModelAndView loadBasketPage() { return new ModelAndView("WEB-INF/pages/basket"); }
+
     @RequestMapping(value = "/order", method = RequestMethod.GET)
     public ModelAndView loadOrderPage(HttpServletRequest request) {
 

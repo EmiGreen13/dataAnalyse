@@ -153,16 +153,77 @@ function loadProducts(id){
 
 function setProducts(products) {
 
-    //alert(products[index]['content'])
+    var parser=new DOMParser();
+    var xmlDoc;
+    var product = {};
+    var $xml;
 
-    for(var index = 0; index < products.length; products++){
+    for(var index = 0; index < products.length; index++){
 
-        var x = products[index]['content']
+        xmlDoc=parser.parseFromString(products[index]['content'],"text/html");
+        $xml = $(xmlDoc);
+        var image = $xml.find('img');
 
-        alert(x)
+        if (image != null){
 
-        $("#content").append('<img src="' + products[index]['content'] + '">')
+            product.pushButton = '<a class="add_to_cart" href="#" onclick="addToBasket(' + products[index]["hierarchyId"] + ', product' + products[index]["hierarchyId"] + ')">Add to Card</a>';
+            //product.pushButton = '<a class="add_to_cart" href="#" onclick="addToBasket(' + products[index]["hierarchyId"] + ', product' + products[index]["hierarchyId"] + ')">' + 'Add to card' + '</a>';
+            product.price = '<p class="product_price">150 руб</p>';
 
+
+            if(products[index]['description'] != null){
+                product.h3 = '<h3>' + products[index]['description'] + '</h3>';
+
+            }
+            else{
+                product.h3 = '<h3></h3>';
+            }
+
+            product.img = '<a href = "product?productId=' + products[index]["productId"] + '" >' + products[index]['content'] + '</a>';
+
+
+            // obj.description = products[index]['description'];
+            // obj.button = '<input type="button" onclick="addToBasket(' + products[index]["hierarchyId"] + ', product' + products[index]["hierarchyId"] + ')" value="Добавить в корзину">';
+            // obj.input = '<input type="text" value="1" id="product' + products[index]["hierarchyId"] + '">';
+
+            // $("#content").html(obj.img);
+            // $("#content").append('<div>' + obj.description + '</div>');
+            // $("#content").append(obj.button);
+            // $("#content").append(obj.input);
+
+
+            $("#content").append('<div class="col col_14 product_gallery">'
+                + product.img
+                + product.h3
+                + product.price
+                + product.pushButton
+                +
+            '</div>')
+        }
     }
+}
+
+function addToBasket(id, selector) {
+
+    var count = $(selector).val();
+
+    alert('ok')
+
+    $.ajax({
+        type: 'GET',
+        url: 'add_product_to_basket',
+        data: {'hierarchyId': id, 'count': count},
+        dataType: 'json',
+        success: function (result) {
+
+            $("#basket").text(result);
+
+        },
+        error: function (msg) {
+            var error = JSON.parse(msg.responseText);
+            alert(error);
+            return false;
+        }
+    });
 
 }

@@ -6,6 +6,7 @@ public class HierarchyProduct {
     private Integer hierarchyLevel;
     private Integer referencedHierarchyLevel;
     private Integer parentHierarchyId;
+    private Integer productId;
     private String content;
     private String description;
 
@@ -34,6 +35,7 @@ public class HierarchyProduct {
             Integer hierarchyLevel,
             Integer referencedHierarchyLevel,
             Integer parentHierarchyId,
+            Integer productId,
             String content,
             String description
     ){
@@ -42,6 +44,7 @@ public class HierarchyProduct {
         this.setHierarchyLevel(hierarchyLevel);
         this.setReferencedHierarchyLevel(referencedHierarchyLevel);
         this.setParentHierarchyId(parentHierarchyId);
+        this.setProductId(productId);
         this.setContent(content);
         this.setDescription(description);
     }
@@ -101,5 +104,13 @@ public class HierarchyProduct {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Integer getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Integer productId) {
+        this.productId = productId;
     }
 }
