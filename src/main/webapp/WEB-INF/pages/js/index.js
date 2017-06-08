@@ -157,6 +157,9 @@ function setProducts(products) {
     var xmlDoc;
     var product = {};
     var $xml;
+    var selector = $("#content");
+
+    selector.empty();
 
     for(var index = 0; index < products.length; index++){
 
@@ -166,8 +169,7 @@ function setProducts(products) {
 
         if (image != null){
 
-            product.pushButton = '<a class="add_to_cart" href="#" onclick="addToBasket(' + products[index]["hierarchyId"] + ', product' + products[index]["hierarchyId"].toString() + ')">Add to Card</a>';
-            //product.pushButton = '<a class="add_to_cart" href="#" onclick="addToBasket(' + products[index]["hierarchyId"] + ', product' + products[index]["hierarchyId"] + ')">' + 'Add to card' + '</a>';
+            product.pushButton = '<a class="add_to_cart" href="#" onclick="addToBasket(' + products[index]['hierarchyId'] + ')">Add to Card</a>';
             product.price = '<p class="product_price">150 руб</p>';
 
 
@@ -181,7 +183,7 @@ function setProducts(products) {
 
             product.img = '<a href = "product?productId=' + products[index]["productId"] + '" >' + products[index]['content'] + '</a>';
 
-            $("#content").append('<div class="col col_14 product_gallery">'
+            selector.append('<div class="col col_14 product_gallery">'
                 + product.img
                 + product.h3
                 + product.price
@@ -192,16 +194,12 @@ function setProducts(products) {
     }
 }
 
-function addToBasket(id, selector) {
-
-    var count = $(selector).val();
-
-    alert('ok')
+function addToBasket(id) {
 
     $.ajax({
         type: 'GET',
         url: 'add_product_to_basket',
-        data: {'hierarchyId': id, 'count': count},
+        data: {'hierarchyId': id},
         dataType: 'json',
         success: function (result) {
 
