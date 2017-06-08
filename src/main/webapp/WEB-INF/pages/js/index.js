@@ -166,7 +166,7 @@ function setProducts(products) {
 
         if (image != null){
 
-            product.pushButton = '<a class="add_to_cart" href="#" onclick="addToBasket(' + products[index]["hierarchyId"] + ', product' + products[index]["hierarchyId"] + ')">Add to Card</a>';
+            product.pushButton = '<a class="add_to_cart" href="#" onclick="addToBasket(' + products[index]["hierarchyId"] + ', product' + products[index]["hierarchyId"].toString() + ')">Add to Card</a>';
             //product.pushButton = '<a class="add_to_cart" href="#" onclick="addToBasket(' + products[index]["hierarchyId"] + ', product' + products[index]["hierarchyId"] + ')">' + 'Add to card' + '</a>';
             product.price = '<p class="product_price">150 руб</p>';
 

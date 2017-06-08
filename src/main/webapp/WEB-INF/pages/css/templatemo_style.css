@@ -262,6 +262,8 @@ table td { border-bottom: 1px solid #ccc }
 
 .product_gallery img {
 	margin-bottom: 5px;
+	max-width: 200px;
+	height: 150px;
 }
 
 .product_gallery h3 {
@@ -280,6 +282,7 @@ table td { border-bottom: 1px solid #ccc }
 	padding-right: 30px;
 	background: url(../images/cart.png) no-repeat right center
 }
+
 
 #newsletter {
 	margin-bottom: 60px;
