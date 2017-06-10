@@ -1,3 +1,4 @@
+<%@ page import="entity.Basket" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -23,8 +24,63 @@
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
 
 </head>
+
+<script type="application/javascript">
+
+    function setProducts(products) {
+
+        var parser=new DOMParser();
+        var xmlDoc;
+        var product = {};
+        var $xml;
+        var selector = $("#content");
+
+        selector.empty();
+
+        for(var index = 0; index < products.length; index++){
+
+            xmlDoc=parser.parseFromString(products[index]['content'],"text/html");
+            $xml = $(xmlDoc);
+            var image = $xml.find('img');
+
+            if (image != null){
+
+                product.pushButton = '<a class="add_to_cart" href="javascript:void(0);" onclick="addToBasket(' + products[index]['hierarchyId'] + ')"><spring:message code="AddToCard" text="Добавить в корзину"/></a>';
+                product.price = '<p class="product_price">150 руб</p>';
+
+
+                if(products[index]['description'] != null){
+                    product.h3 = '<h3>' + products[index]['description'] + '</h3>';
+
+                }
+                else{
+                    product.h3 = '<h3><spring:message code="NoTitle" text="Нет названия"/></h3>';
+                }
+
+                product.img = '<a href = "product?productId=' + products[index]["productId"] + '" >' + products[index]['content'] + '</a>';
+
+                selector.append('<div class="col col_14 product_gallery">'
+                        + product.img
+                        + product.h3
+                        + product.price
+                        <c:if test="${pageContext.request.remoteUser != null}">
+                            + product.pushButton
+                        </c:if>
+                        <c:if test="${pageContext.request.remoteUser == null}">
+                            + '<spring:message code="JustAuthorizedUsersCanMakeanOrder" text="Пожалуйста, авторизуйтесь для выполнения покупки"/>'
+                        </c:if>
+
+                        +
+                        '</div>')
+            }
+        }
+    }
+
+</script>
+
 <body id="home">
 
+<input type="hidden" id="hdnSession" data-value="@Request.RequestContext.HttpContext.Session['basket']" />
 
 <div id="templatemo_wrapper">
     <div id="templatemo_header">

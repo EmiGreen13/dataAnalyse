@@ -17,7 +17,9 @@ public class PageController {
     }
 
     @RequestMapping(value = {"/", "/index"}, method = RequestMethod.GET)
-    public ModelAndView loadIndexPage() {
+    public ModelAndView loadIndexPage(HttpServletRequest request) {
+        request.getSession().setAttribute("x", 58);
+
         return new ModelAndView("WEB-INF/pages/index");
     }
 

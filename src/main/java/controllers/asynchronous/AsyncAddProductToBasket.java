@@ -59,7 +59,7 @@ public class AsyncAddProductToBasket extends ProcessErrorController {
                 processInternalErrors(response, internalError);
             }
             else{
-                HttpSession session = request.getSession();
+                HttpSession session = request.getSession(true);
                 Basket basket = (Basket)session.getAttribute("basket");
 
                 if(basket != null){

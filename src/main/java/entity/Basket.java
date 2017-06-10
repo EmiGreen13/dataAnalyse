@@ -12,6 +12,7 @@ public class Basket {
     }
 
     public void add(Product product, Integer count){
+
         productToCountList.add(new ProductToCount(product, count));
     }
 
@@ -28,7 +29,7 @@ public class Basket {
         setProducts(new ArrayList<ProductToCount>(10));
     }
 
-    private List<ProductToCount> productToCountList;
+    public List<ProductToCount> productToCountList;
 
     public List<ProductToCount> getProducts() {
         return productToCountList;
@@ -45,4 +46,5 @@ public class Basket {
     public void setX(int x) {
         this.x = x;
     }
+
 }

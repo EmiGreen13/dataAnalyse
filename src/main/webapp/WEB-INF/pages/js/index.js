@@ -1,4 +1,25 @@
+
+
+
 $(document).ready(function() {
+
+    var productCount = 0;
+
+    $.ajax({
+        type: 'GET',
+        url: 'get_count_products_in_basket',
+        // data: {'id': id, 'first': first, 'last': last},
+        dataType: 'json',
+        success: function (result) {
+            productCount = result;
+            $("#basket").text(productCount);
+        },
+        error: function (msg) {
+            var error = JSON.parse(msg.responseText);
+            alert(error);
+            return false;
+        }
+    });
 
     var id = 1;
     var first = null;
@@ -151,48 +172,7 @@ function loadProducts(id){
 
 }
 
-function setProducts(products) {
 
-    var parser=new DOMParser();
-    var xmlDoc;
-    var product = {};
-    var $xml;
-    var selector = $("#content");
-
-    selector.empty();
-
-    for(var index = 0; index < products.length; index++){
-
-        xmlDoc=parser.parseFromString(products[index]['content'],"text/html");
-        $xml = $(xmlDoc);
-        var image = $xml.find('img');
-
-        if (image != null){
-
-            product.pushButton = '<a class="add_to_cart" href="#" onclick="addToBasket(' + products[index]['hierarchyId'] + ')">Add to Card</a>';
-            product.price = '<p class="product_price">150 руб</p>';
-
-
-            if(products[index]['description'] != null){
-                product.h3 = '<h3>' + products[index]['description'] + '</h3>';
-
-            }
-            else{
-                product.h3 = '<h3></h3>';
-            }
-
-            product.img = '<a href = "product?productId=' + products[index]["productId"] + '" >' + products[index]['content'] + '</a>';
-
-            selector.append('<div class="col col_14 product_gallery">'
-                + product.img
-                + product.h3
-                + product.price
-                + product.pushButton
-                +
-            '</div>')
-        }
-    }
-}
 
 function addToBasket(id) {
 
