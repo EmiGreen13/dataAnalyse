@@ -45,9 +45,12 @@
 
             if (image != null){
 
-                product.pushButton = '<a class="add_to_cart" href="javascript:void(0);" onclick="addToBasket(' + products[index]['hierarchyId'] + ')"><spring:message code="AddToCard" text="Добавить в корзину"/></a>';
+                product.pushButton = '<a class="add_to_cart" href="javascript:void(0);" onclick="addToBasket(' + products[index]['hierarchyId'] + ',' + '\'#num_count' + products[index]['hierarchyId'] + '\')"><spring:message code="AddToCard" text="Добавить в корзину"/></a>';
                 product.price = '<p class="product_price">150 руб</p>';
 
+                product.counter = '<div class="input_group_quantity_goods">'
+                        +'<input type="number" step="1" min="1" max="16" id="num_count' + products[index]["hierarchyId"].toString() + '" name="quantity" value="1" title="Qty">'
+                        +'</div>';
 
                 if(products[index]['description'] != null){
                     product.h3 = '<h3>' + products[index]['description'] + '</h3>';
@@ -64,6 +67,7 @@
                         + product.h3
                         + product.price
                         <c:if test="${pageContext.request.remoteUser != null}">
+                            + product.counter
                             + product.pushButton
                         </c:if>
                         <c:if test="${pageContext.request.remoteUser == null}">
@@ -144,9 +148,7 @@
                 <div id="catalogs"></div>
 
                 <script src='${pageContext.request.contextPath}/js/index.js' type='text/javascript'></script>
-                <c:if test="${pageContext.request.remoteUser != null}">
-                    <div>${pageContext.request.remoteUser}</div>
-                </c:if>
+
 
                 <form id="logoutForm" action="<c:url value="/j_spring_security_logout" />" method="post">
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>

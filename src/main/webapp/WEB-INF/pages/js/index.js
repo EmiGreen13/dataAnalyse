@@ -174,12 +174,14 @@ function loadProducts(id){
 
 
 
-function addToBasket(id) {
+function addToBasket(id, selector) {
+
+    var count = $(selector).val();
 
     $.ajax({
         type: 'GET',
         url: 'add_product_to_basket',
-        data: {'hierarchyId': id},
+        data: {'hierarchyId': id, 'count': count},
         dataType: 'json',
         success: function (result) {
 

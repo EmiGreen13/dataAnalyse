@@ -282,7 +282,14 @@ table td { border-bottom: 1px solid #ccc }
 	padding-right: 30px;
 	background: url(../images/cart.png) no-repeat right center
 }
+.input_group_quantity_goods{
+	width: 220px;
+}
 
+.input_group_quantity_goods input{
+	width: 40px;
+	margin: 5px auto;
+}
 
 #newsletter {
 	margin-bottom: 60px;

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class PageController {
@@ -37,7 +38,14 @@ public class PageController {
     public ModelAndView loadProductPage() { return new ModelAndView("WEB-INF/pages/product"); }
 
     @RequestMapping(value = "/basket", method = RequestMethod.GET)
-    public ModelAndView loadBasketPage() { return new ModelAndView("WEB-INF/pages/basket"); }
+    public ModelAndView loadBasketPage(HttpServletRequest request, HttpServletResponse response) {
+
+        if (request.getRemoteUser() == null){
+            return new ModelAndView("redirect:/index");
+        }
+
+        return new ModelAndView("WEB-INF/pages/basket");
+    }
 
     @RequestMapping(value = "/order", method = RequestMethod.GET)
     public ModelAndView loadOrderPage(HttpServletRequest request) {
