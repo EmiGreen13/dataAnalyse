@@ -29,7 +29,10 @@
 <script type="application/javascript">
 
     $(document).ready(function() {
+        loadProducts();
+    });
 
+    function loadProducts(){
         $.ajax({
             type: 'GET',
             url: 'show_basket',
@@ -43,7 +46,7 @@
                 return false;
             }
         });
-    });
+    }
 
     function deleteProductFromBasket(productToPriceId){
 
@@ -53,7 +56,7 @@
             data: {'productToPriceId': productToPriceId},
             dataType: 'json',
             success: function () {
-                $("#productToPriceId" + productToPriceId).remove();
+                loadProducts();
             },
             error: function (msg) {
                 var error = JSON.parse(msg.responseText);
