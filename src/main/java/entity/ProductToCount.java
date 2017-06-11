@@ -2,20 +2,40 @@ package entity;
 
 public class ProductToCount {
 
-    private Product product;
+    private Integer productToPriceId;
     private Integer count;
+    private ProductToPrice productToPrice;
 
-    public ProductToCount(Product product, Integer count){
-        this.setProduct(product);
+
+    public ProductToCount(Integer productToPriceId, Integer count){
+        this.setProductToPriceId(productToPriceId);
         this.setCount(count);
     }
 
-    public Product getProduct() {
-        return product;
+    public Integer getProductToPriceId() {
+        return this.productToPriceId;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setProductToPriceId(Integer productToPriceId) {
+        this.productToPriceId = productToPriceId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) return true;
+        if (!(o instanceof ProductToCount)) {
+            return false;
+        }
+
+        ProductToCount productToCount = (ProductToCount) o;
+
+        return productToPriceId.intValue() == productToCount.getProductToPriceId();
+    }
+
+    @Override
+    public int hashCode(){
+        return this.productToPriceId;
     }
 
     public Integer getCount() {
@@ -24,5 +44,13 @@ public class ProductToCount {
 
     public void setCount(Integer count) {
         this.count = count;
+    }
+
+    public ProductToPrice getProductToPrice() {
+        return productToPrice;
+    }
+
+    public void setProductToPrice(ProductToPrice productToPrice) {
+        this.productToPrice = productToPrice;
     }
 }

@@ -97,7 +97,18 @@ public class HierarchyDaoManager implements HierarchyDao {
 
                 hierarchyProducts = new ArrayList<>(count);
                 while (resultSet.next()) {
-                    hierarchyProduct = new HierarchyProduct(resultSet.getInt(1), resultSet.getString(2), resultSet.getInt(3), resultSet.getInt(4), resultSet.getInt(5), resultSet.getInt(6), resultSet.getString(7), resultSet.getString(8));
+                    hierarchyProduct = new HierarchyProduct(
+                            resultSet.getInt(1),
+                            resultSet.getString(2),
+                            resultSet.getInt(3),
+                            resultSet.getInt(4),
+                            resultSet.getInt(5),
+                            resultSet.getInt(6),
+                            resultSet.getString(7),
+                            resultSet.getString(8),
+                            resultSet.getInt(9),
+                            resultSet.getDouble(10)
+                    );
                     hierarchyProducts.add(hierarchyProduct);
                 }
             }

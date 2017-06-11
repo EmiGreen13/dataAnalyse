@@ -2,6 +2,7 @@ package controllers;
 
 import entity.Basket;
 import entity.Product;
+import entity.ProductToPrice;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -49,9 +50,6 @@ public class PageController {
 
     @RequestMapping(value = "/order", method = RequestMethod.GET)
     public ModelAndView loadOrderPage(HttpServletRequest request) {
-
-        Basket basket = (Basket)request.getSession().getAttribute("basket");
-        basket.add(new Product());
 
         return new ModelAndView("WEB-INF/pages/order");
     }

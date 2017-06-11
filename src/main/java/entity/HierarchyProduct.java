@@ -9,6 +9,8 @@ public class HierarchyProduct {
     private Integer productId;
     private String content;
     private String description;
+    private Integer productToPriceId;
+    private Double price;
 
     public HierarchyProduct(){}
 
@@ -47,6 +49,30 @@ public class HierarchyProduct {
         this.setProductId(productId);
         this.setContent(content);
         this.setDescription(description);
+    }
+
+    public HierarchyProduct(
+            Integer hierarchyId,
+            String hierarchyCode,
+            Integer hierarchyLevel,
+            Integer referencedHierarchyLevel,
+            Integer parentHierarchyId,
+            Integer productId,
+            String content,
+            String description,
+            Integer productToPriceId,
+            Double price
+    ){
+        this.setHierarchyId(hierarchyId);
+        this.setHierarchyCode(hierarchyCode);
+        this.setHierarchyLevel(hierarchyLevel);
+        this.setReferencedHierarchyLevel(referencedHierarchyLevel);
+        this.setParentHierarchyId(parentHierarchyId);
+        this.setProductId(productId);
+        this.setContent(content);
+        this.setDescription(description);
+        this.setProductToPriceId(productToPriceId);
+        this.setPrice(price);
     }
 
     public Integer getHierarchyId() {
@@ -112,5 +138,21 @@ public class HierarchyProduct {
 
     public void setProductId(Integer productId) {
         this.productId = productId;
+    }
+
+    public Integer getProductToPriceId() {
+        return productToPriceId;
+    }
+
+    public void setProductToPriceId(Integer productToPriceId) {
+        this.productToPriceId = productToPriceId;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 }

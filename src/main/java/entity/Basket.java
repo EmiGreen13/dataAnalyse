@@ -1,19 +1,17 @@
 package entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Basket {
 
-    private int x = 5;
-
-    public void add(Product product){
-        productToCountList.add(new ProductToCount(product, 1));
+    public void add(Integer productToPriceId){
+        productToCountList.add(new ProductToCount(productToPriceId, 1));
     }
 
-    public void add(Product product, Integer count){
+    public void add(Integer productToPriceId, Integer count){
 
-        productToCountList.add(new ProductToCount(product, count));
+        productToCountList.add(new ProductToCount(productToPriceId, count));
     }
 
     public Integer getCountProducts(){
@@ -26,25 +24,18 @@ public class Basket {
 
 
     public Basket(){
-        setProducts(new ArrayList<ProductToCount>(10));
+        setProducts(new HashSet<ProductToCount>(10));
     }
 
-    public List<ProductToCount> productToCountList;
+    public Set<ProductToCount> productToCountList;
 
-    public List<ProductToCount> getProducts() {
+    public Set<ProductToCount> getProducts() {
         return productToCountList;
     }
 
-    public void setProducts(List<ProductToCount> productToCountList) {
+    public void setProducts(Set<ProductToCount> productToCountList) {
         this.productToCountList = productToCountList;
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
 
 }

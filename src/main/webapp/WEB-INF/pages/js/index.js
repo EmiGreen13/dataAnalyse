@@ -181,7 +181,7 @@ function addToBasket(id, selector) {
     $.ajax({
         type: 'GET',
         url: 'add_product_to_basket',
-        data: {'hierarchyId': id, 'count': count},
+        data: {'productToPriceId': id, 'count': count},
         dataType: 'json',
         success: function (result) {
 

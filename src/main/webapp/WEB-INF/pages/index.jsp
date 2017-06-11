@@ -45,16 +45,23 @@
 
             if (image != null){
 
-                product.pushButton = '<a class="add_to_cart" href="javascript:void(0);" onclick="addToBasket(' + products[index]['hierarchyId'] + ',' + '\'#num_count' + products[index]['hierarchyId'] + '\')"><spring:message code="AddToCard" text="Добавить в корзину"/></a>';
-                product.price = '<p class="product_price">150 руб</p>';
+                product.pushButton = '<a class="add_to_cart" href="javascript:void(0);" onclick="addToBasket(' + products[index]['productToPriceId'] + ',' + '\'#num_count' + products[index]['productToPriceId'] + '\')"><spring:message code="AddToCard" text="Добавить в корзину"/></a>';
+
+                product.code = '<p class="product_price">' + products[index]['hierarchyCode'] + '</p>';
+
+                if(products[index]['price'] != null){
+                    product.price = '<p class="product_price">' + products[index]['price'] + ' р</p>';
+                }
+                else{
+                    product.price = '<h3><spring:message code="NoPrice" text="Нет цены"/></h3>' + ' р</p>';
+                }
 
                 product.counter = '<div class="input_group_quantity_goods">'
-                        +'<input type="number" step="1" min="1" max="16" id="num_count' + products[index]["hierarchyId"].toString() + '" name="quantity" value="1" title="Qty">'
+                        +'<input type="number" step="1" min="1" max="16" id="num_count' + products[index]["productToPriceId"].toString() + '" name="quantity" value="1" title="Qty">'
                         +'</div>';
 
                 if(products[index]['description'] != null){
                     product.h3 = '<h3>' + products[index]['description'] + '</h3>';
-
                 }
                 else{
                     product.h3 = '<h3><spring:message code="NoTitle" text="Нет названия"/></h3>';
@@ -65,6 +72,7 @@
                 selector.append('<div class="col col_14 product_gallery">'
                         + product.img
                         + product.h3
+                        + product.code
                         + product.price
                         <c:if test="${pageContext.request.remoteUser != null}">
                             + product.counter
@@ -74,8 +82,8 @@
                             + '<spring:message code="JustAuthorizedUsersCanMakeanOrder" text="Пожалуйста, авторизуйтесь для выполнения покупки"/>'
                         </c:if>
 
-                        +
-                        '</div>')
+                        + '<input type="hidden" id="productToPriceId' + products[index]["productToPriceId"] + '" value="' + products[index] + '">'
+                        + '</div>')
             }
         }
     }

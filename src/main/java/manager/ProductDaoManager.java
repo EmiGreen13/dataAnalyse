@@ -3,6 +3,7 @@ package manager;
 
 import entity.InternalError;
 import entity.Product;
+import entity.ProductToPrice;
 
 import javax.sql.DataSource;
 import java.sql.CallableStatement;
@@ -72,11 +73,11 @@ public class ProductDaoManager implements ProductDao {
     }
 
     @Override
-    public Product getProductByProductId(Integer id, Locale locale, InternalError outputError) {
+    public ProductToPrice getProductByProductToPriceId(Integer id, Locale locale, InternalError outputError) {
 
-        Product product = null;
+        ProductToPrice productToPrice = null;
         try{
-            CallableStatement call = dataSource.getConnection().prepareCall("{ call dataanalyse.spGetProductByProductId(?,?,?,?) }", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            CallableStatement call = dataSource.getConnection().prepareCall("{ call dataanalyse.spGetProductByProductToPriceId(?,?,?,?) }", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
             call.setObject(1, id, Types.INTEGER);
             call.setString(2, locale.getLanguage());
@@ -96,7 +97,7 @@ public class ProductDaoManager implements ProductDao {
 
                 if(count == 1){
                     while (resultSet.next()) {
-                        product = new Product(resultSet.getInt(1), resultSet.getInt(2), resultSet.getString(3), resultSet.getString(4));
+                        productToPrice = new ProductToPrice(resultSet.getInt(1), resultSet.getInt(2), resultSet.getInt(3), resultSet.getString(4), resultSet.getString(5), resultSet.getDouble(6), resultSet.getString(7));
                     }
                 }
             }
@@ -110,16 +111,16 @@ public class ProductDaoManager implements ProductDao {
 
             //if error occurs
             if (error != 0){
-                product = null;
+                productToPrice = null;
             }
 
         }
         catch (Exception exception){
-            product = null;
+            productToPrice = null;
             outputError.setErrorMessage(exception.getLocalizedMessage());
             outputError.setErrorNumber(exception.hashCode());
         }
-        return product;
+        return productToPrice;
     }
 
 }

@@ -1,4 +1,5 @@
 <%@ page import="entity.Basket" %>
+<%@ page import="org.codehaus.jackson.map.ObjectMapper" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -17,7 +18,7 @@
     <link href="css/templatemo_style.css" rel="stylesheet" type="text/css" />
 
     <link rel="stylesheet" type="text/css" href="css/ddsmoothmenu.css" />
-
+    <link rel="stylesheet" type="text/css" href="css/table.css" />
     <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/ddsmoothmenu.js"></script>
 
@@ -27,60 +28,68 @@
 
 <script type="application/javascript">
 
-    function setProducts(products) {
+    $(document).ready(function() {
 
-        var parser=new DOMParser();
-        var xmlDoc;
-        var product = {};
-        var $xml;
-        var selector = $("#content");
+        $.ajax({
+            type: 'GET',
+            url: 'show_basket',
+            dataType: 'json',
+            success: function (result) {
+                showProducts(result);
+            },
+            error: function (msg) {
+                var error = JSON.parse(msg.responseText);
+                alert(error);
+                return false;
+            }
+        });
 
-        selector.empty();
 
+
+
+    });
+
+    function showProducts(products) {
+
+        var table = $('<table></table>').addClass('table_blur');
+        var row = $('<th><spring:message code="ProductCode" text="Код товара"/></th><th><spring:message code="ProductTitle" text="Название товара"/></th><th><spring:message code="ProductCount" text="Количество товара"/></th><th><spring:message code="ProductPrice" text="Цена товара"/></th><th><spring:message code="ProductTotal" text="Итого"/></th><th></th>');
+        table.append(row);
+
+        var productToPrice = null;
+        var rowData = null;
+        var total = 0;
         for(var index = 0; index < products.length; index++){
 
-            xmlDoc=parser.parseFromString(products[index]['content'],"text/html");
-            $xml = $(xmlDoc);
-            var image = $xml.find('img');
+            productToPrice = products[index]['productToPrice'];
 
-            if (image != null){
+            row = $('<tr></tr>');
+            rowData = $('<td>' + productToPrice['hierarchyCode'] + '</td><td>' + productToPrice['description'] + '</td><td>' + products[index]['count'] + '</td><td>' +
+                    productToPrice['price']+ '</td><td>' + Math.round(productToPrice['price'] * products[index]['count']*100)/100 + '</td><td>'+ '<a href="">' + '<spring:message code="RemoveProduct" text="Удалить"/>' + '</a>' + '</td>');
 
-                product.pushButton = '<a class="add_to_cart" href="javascript:void(0);" onclick="addToBasket(' + products[index]['hierarchyId'] + ')"><spring:message code="AddToCard" text="Добавить в корзину"/></a>';
-                product.price = '<p class="product_price">150 руб</p>';
+            total = total + productToPrice['price'] * products[index]['count'];
 
-
-                if(products[index]['description'] != null){
-                    product.h3 = '<h3>' + products[index]['description'] + '</h3>';
-
-                }
-                else{
-                    product.h3 = '<h3><spring:message code="NoTitle" text="Нет названия"/></h3>';
-                }
-
-                product.img = '<a href = "product?productId=' + products[index]["productId"] + '" >' + products[index]['content'] + '</a>';
-
-                selector.append('<div class="col col_14 product_gallery">'
-                        + product.img
-                        + product.h3
-                        + product.price
-                        <c:if test="${pageContext.request.remoteUser != null}">
-                        + product.pushButton
-                        </c:if>
-                        <c:if test="${pageContext.request.remoteUser == null}">
-                        + '<spring:message code="JustAuthorizedUsersCanMakeanOrder" text="Пожалуйста, авторизуйтесь для выполнения покупки"/>'
-                        </c:if>
-
-                        +
-                        '</div>')
-            }
+            row.append(rowData);
+            table.append(row);
         }
+        rowData = $('<td></td><td></td><td></td><td></td><td>' + Math.round(total*100)/100 + '</td><td></td>');
+        row = $('<tr></tr>');
+        row.append(rowData);
+        table.append(row);
+        $("#auth").append(table);
+
     }
+
 
 </script>
 
 <body id="home">
 
 <input type="hidden" id="hdnSession" data-value="@Request.RequestContext.HttpContext.Session['basket']" />
+
+
+<form id="logoutForm" action="<c:url value="/j_spring_security_logout" />" method="post">
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+</form>
 
 <div id="templatemo_wrapper">
     <div id="templatemo_header">
@@ -131,30 +140,7 @@
     <div id="templatemo_main_top"></div>
     <div id="templatemo_main">
 
-        <div id="sidebar">
-
-            <h3><a href="basket"><spring:message code="Basket" text="Корзина"/> (<span id="basket">0</span>)</a></h3>
-
-
-            <h3><spring:message code="Catalog" text="Каталог"/></h3>
-
-            <div id ="sidebar_menu">
-
-
-                <div id="catalogs"></div>
-
-                <script src='${pageContext.request.contextPath}/js/index.js' type='text/javascript'></script>
-                <c:if test="${pageContext.request.remoteUser != null}">
-                    <div>${pageContext.request.remoteUser}</div>
-                </c:if>
-
-                <form id="logoutForm" action="<c:url value="/j_spring_security_logout" />" method="post">
-                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                </form>
-            </div>
-        </div>
-
-        <div id="content">
+        <div id="auth">
 
             <%--<div class="col col_14 product_gallery">--%>
             <%--<a href="productdetail.html"><img src="images/product/01.jpg" alt="Product 01" /></a>--%>

@@ -2,10 +2,6 @@ package controllers.asynchronous;
 
 import controllers.ProcessErrorController;
 import entity.Basket;
-import entity.InternalError;
-import entity.Product;
-import manager.ProductDao;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,9 +16,6 @@ import java.util.Locale;
 @RequestMapping(value = "/add_product_to_basket")
 public class AsyncAddProductToBasket extends ProcessErrorController {
 
-    @Autowired
-    private ProductDao productDao;
-
     @RequestMapping
     public @ResponseBody
     Integer addProduct(
@@ -32,16 +25,16 @@ public class AsyncAddProductToBasket extends ProcessErrorController {
     ) throws IOException {
 
         Integer exitCode = 0;
-        Integer hierarchyId = null;
+        Integer productToPriceId = null;
         Integer count = 1;
 
         try{
 
             try {
-                hierarchyId = Integer.parseInt(request.getParameter("hierarchyId"));
+                productToPriceId = Integer.parseInt(request.getParameter("productToPriceId"));
             }
             catch (NumberFormatException exception){
-                hierarchyId = null;
+                productToPriceId = null;
             }
 
             try {
@@ -51,39 +44,31 @@ public class AsyncAddProductToBasket extends ProcessErrorController {
                 count = null;
             }
 
-            InternalError internalError = new InternalError();
-
-            Product product = productDao.getProductByProductId(hierarchyId, locale, internalError);
-
-            if(product == null || internalError.getErrorNumber() != 0){
-                processInternalErrors(response, internalError);
-            }
-            else{
                 HttpSession session = request.getSession(true);
                 Basket basket = (Basket)session.getAttribute("basket");
 
                 if(basket != null){
                     if(count != null){
-                        basket.add(product, count);
+                        basket.add(productToPriceId, count);
                     }
                     else{
-                        basket.add(product);
+                        basket.add(productToPriceId);
                     }
                     exitCode = basket.getProducts().size();
                 }
                 else{
                     Basket basket1 = new Basket();
                     if(count != null){
-                        basket1.add(product, count);
+                        basket1.add(productToPriceId, count);
                     }
                     else{
-                        basket1.add(product);
+                        basket1.add(productToPriceId);
                     }
                     session.setAttribute("basket", basket1);
 
                     exitCode = basket1.getProducts().size();
                 }
-            }
+
         }
         catch (Exception exception){
             exitCode = -1;
