@@ -20,15 +20,72 @@
     <meta name="description" content="" />
 
     <link href="css/templatemo_style.css" rel="stylesheet" type="text/css" />
-
+    <link href="css/table.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" type="text/css" href="css/ddsmoothmenu.css" />
-
-    <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/ddsmoothmenu.js"></script>
 
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
 
 </head>
+
+
+
+<script type="application/javascript">
+
+
+    $(document).ready(function() {
+
+        var productCount = 0;
+
+        $.ajax({
+            type: 'GET',
+            url: 'get_year_month_statistics',
+            // data: {'id': id, 'first': first, 'last': last},
+            dataType: 'json',
+            success: function (result) {
+                setYearStatisticsPerMonth(result);
+            },
+            error: function (msg) {
+                var error = JSON.parse(msg.responseText);
+                alert(error);
+                return false;
+            }
+        });
+    });
+
+    function setYearStatisticsPerMonth(statistics) {
+
+        var selector = $("#statistics");
+        selector.empty();
+
+        var table = $('<table></table>').addClass('table_blur');
+        var row = $('<th><spring:message code="YearStatisticsMonth" text="Месяц"/></th><th><spring:message code="YearStatisticsReceipts" text="Выручка"/></th>');
+            table.append(row);
+
+            var productToPrice = null;
+            var rowData = null;
+            var total = 0;
+            for(var index = 0; index < statistics.length; index++){
+
+                row = $('<tr></tr>');
+
+                rowData = $('<td>' + statistics[index]['month'] + '</td><td>' + statistics[index]['receipts'] + '</td><td>');
+                total = total + statistics[index]['receipts'];
+
+                row.append(rowData);
+                table.append(row);
+            }
+            rowData = $('<td></td><td>' + Math.round(total*100)/100 + '</td>');
+            row = $('<tr></tr>');
+            row.append(rowData);
+            table.append(row);
+            selector.append(table);
+    }
+
+</script>
+
+
+
 <body id="home">
 
 <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
@@ -72,7 +129,7 @@
 
     <div id="templatemo_main">
 
-            <div id="auth">
+            <div id="statistics">
 
 
             </div>
