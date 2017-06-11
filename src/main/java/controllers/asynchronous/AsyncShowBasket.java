@@ -33,8 +33,7 @@ public class AsyncShowBasket extends ProcessErrorController {
                 Basket basket = (Basket)session.getAttribute("basket");
 
                 if(basket != null){
-                    productToCounts =  basket.getProducts();
-
+                    productToCounts =  new HashSet<>(basket.getProducts().values());
                     InternalError internalError = new InternalError();
 
                     for(ProductToCount productToCount: productToCounts){

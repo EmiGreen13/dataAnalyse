@@ -43,15 +43,34 @@
                 return false;
             }
         });
-
-
-
-
     });
+
+    function deleteProductFromBasket(productToPriceId){
+
+        $.ajax({
+            type: 'GET',
+            url: 'delete_product_from_basket',
+            data: {'productToPriceId': productToPriceId},
+            dataType: 'json',
+            success: function () {
+                $("#productToPriceId" + productToPriceId).remove();
+            },
+            error: function (msg) {
+                var error = JSON.parse(msg.responseText);
+                alert(error);
+                return false;
+            }
+        });
+
+
+    }
 
     function showProducts(products) {
 
-        var table = $('<table></table>').addClass('table_blur');
+        var selector = $("#auth");
+        selector.empty();
+
+        var table = $('<table id="cardProducts"></table>').addClass('table_blur');
         var row = $('<th><spring:message code="ProductCode" text="Код товара"/></th><th><spring:message code="ProductTitle" text="Название товара"/></th><th><spring:message code="ProductCount" text="Количество товара"/></th><th><spring:message code="ProductPrice" text="Цена товара"/></th><th><spring:message code="ProductTotal" text="Итого"/></th><th></th>');
         table.append(row);
 
@@ -62,9 +81,11 @@
 
             productToPrice = products[index]['productToPrice'];
 
-            row = $('<tr></tr>');
+            row = $('<tr id="productToPriceId' + productToPrice['productToPriceId'] + '"></tr>');
+
             rowData = $('<td>' + productToPrice['hierarchyCode'] + '</td><td>' + productToPrice['description'] + '</td><td>' + products[index]['count'] + '</td><td>' +
-                    productToPrice['price']+ '</td><td>' + Math.round(productToPrice['price'] * products[index]['count']*100)/100 + '</td><td>'+ '<a href="">' + '<spring:message code="RemoveProduct" text="Удалить"/>' + '</a>' + '</td>');
+                    productToPrice['price']+ '</td><td>' + Math.round(productToPrice['price'] * products[index]['count']*100)/100 + '</td><td>'+
+                    '<a href="javascript:void(0);" onclick="deleteProductFromBasket(' + productToPrice['productToPriceId'] + ')" >' + '<spring:message code="RemoveProduct" text="Удалить"/>' + '</a>' + '</td>');
 
             total = total + productToPrice['price'] * products[index]['count'];
 
@@ -75,11 +96,8 @@
         row = $('<tr></tr>');
         row.append(rowData);
         table.append(row);
-        $("#auth").append(table);
-
+        selector.append(table);
     }
-
-
 </script>
 
 <body id="home">

@@ -1,17 +1,17 @@
 package entity;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Basket {
 
     public void add(Integer productToPriceId){
-        productToCountList.add(new ProductToCount(productToPriceId, 1));
+        productToCountList.put(productToPriceId, new ProductToCount(productToPriceId, 1));
     }
 
     public void add(Integer productToPriceId, Integer count){
 
-        productToCountList.add(new ProductToCount(productToPriceId, count));
+        productToCountList.put(productToPriceId, new ProductToCount(productToPriceId, count));
     }
 
     public Integer getCountProducts(){
@@ -24,16 +24,16 @@ public class Basket {
 
 
     public Basket(){
-        setProducts(new HashSet<ProductToCount>(10));
+        setProducts(new HashMap<Integer, ProductToCount>(20));
     }
 
-    public Set<ProductToCount> productToCountList;
+    public Map<Integer, ProductToCount> productToCountList;
 
-    public Set<ProductToCount> getProducts() {
+    public Map<Integer, ProductToCount> getProducts() {
         return productToCountList;
     }
 
-    public void setProducts(Set<ProductToCount> productToCountList) {
+    public void setProducts(Map<Integer, ProductToCount> productToCountList) {
         this.productToCountList = productToCountList;
     }
 
