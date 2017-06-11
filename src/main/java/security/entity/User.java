@@ -102,7 +102,7 @@ public class User {
     public static Boolean isValidLogin(String login){
         Boolean result = false;
         if (login != null || (login.length() > 0 && login.length() < 50) ){
-            Pattern pattern = Pattern.compile("^[A-Za-z0-9_-]{5,50}$");
+            Pattern pattern = Pattern.compile("^[A-Za-z0-9_-]{4,50}$");
             Matcher matcher = pattern.matcher(login);
             result = matcher.matches();
         }
