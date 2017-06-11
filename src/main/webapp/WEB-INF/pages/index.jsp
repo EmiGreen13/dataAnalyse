@@ -129,6 +129,9 @@
                     <li><a href="profile">${pageContext.request.remoteUser}</a></li>
                     <li><a href="#" onclick="document.getElementById('logoutForm').submit();"><spring:message code="Logout" text="Выход"/></a></li>
                 </c:if>
+                <c:if test='${pageContext.request.isUserInRole("ROLE_ADMIN")}'>
+                    <li><a href="admin"><spring:message code="Admin" text="Управление"/></a></li>
+                </c:if>
             </div>
         </ul>
         <br style="clear: left" />
