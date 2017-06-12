@@ -134,4 +134,66 @@ public class HierarchyDaoManager implements HierarchyDao {
         return hierarchyProducts;
     }
 
+    @Override
+    public List<HierarchyProduct> getRandomProducts(Integer first, Integer last, Locale locale, InternalError outputError) {
+        List<HierarchyProduct> hierarchyProducts = null;
+        HierarchyProduct hierarchyProduct;
+        try{
+            CallableStatement call = dataSource.getConnection().prepareCall("{ call dataanalyse.spGetRandomProduct(?,?,?,?,?) }", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+
+            call.setString(1, locale.getLanguage());
+            call.setObject(2, first);
+            call.setObject(3, last);
+            call.registerOutParameter(4, Types.INTEGER);
+            call.registerOutParameter(5, Types.NVARCHAR);
+
+            Boolean result = call.execute();
+
+            if (result){
+                //Prepare result set
+                ResultSet resultSetRandom = call.getResultSet();
+                //row count
+                resultSetRandom.last();
+                int count = resultSetRandom.getRow();
+                resultSetRandom.beforeFirst();
+
+                hierarchyProducts = new ArrayList<>(count);
+                while (resultSetRandom.next()) {
+                    hierarchyProduct = new HierarchyProduct(
+                            resultSetRandom.getInt(1),
+                            resultSetRandom.getString(2),
+                            resultSetRandom.getInt(3),
+                            resultSetRandom.getInt(4),
+                            resultSetRandom.getInt(5),
+                            resultSetRandom.getInt(6),
+                            resultSetRandom.getString(7),
+                            resultSetRandom.getString(8),
+                            resultSetRandom.getInt(9),
+                            resultSetRandom.getDouble(10)
+                    );
+                    hierarchyProducts.add(hierarchyProduct);
+                }
+            }
+            //Output parameters
+            Integer error = call.getInt(4);
+            String errorMessage = call.getString(5);
+
+            //Set error variables
+            outputError.setErrorNumber(error);
+            outputError.setErrorMessage(errorMessage);
+
+            //if error occurs
+            if (error != 0){
+                hierarchyProducts = null;
+            }
+
+        }
+        catch (Exception exception){
+            hierarchyProducts = null;
+            outputError.setErrorMessage(exception.getLocalizedMessage());
+            outputError.setErrorNumber(exception.hashCode());
+        }
+        return hierarchyProducts;
+    }
+
 }

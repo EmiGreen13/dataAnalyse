@@ -40,6 +40,21 @@ $(document).ready(function() {
         }
     });
 
+    $.ajax({
+        type: 'GET',
+        url: 'load_random_products',
+        data: {'first': first, 'last': last},
+        dataType: 'json',
+        success: function (result) {
+            setProducts(result);
+        },
+        error: function (msg) {
+            var error = JSON.parse(msg.responseText);
+            alert(error);
+            return false;
+        }
+    });
+
 });
 
 
