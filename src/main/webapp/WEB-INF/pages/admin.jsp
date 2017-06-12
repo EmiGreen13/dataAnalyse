@@ -32,6 +32,55 @@
 
 <script type="application/javascript">
 
+    function getMonthStatistics(month) {
+        $.ajax({
+            type: 'GET',
+            url: 'get_year_selected_month_statistics_user',
+            data: {'month': month},
+            dataType: 'json',
+            success: function (result) {
+                setYearStatisticsInSelectedMonth(result);
+            },
+            error: function (msg) {
+                var error = JSON.parse(msg.responseText);
+                alert(error);
+                return false;
+            }
+        });
+    }
+
+    function setYearStatisticsInSelectedMonth(statistics) {
+        var selector = $("#month_detailed");
+        selector.empty();
+
+
+        var table = $('<table></table>').addClass('table_blur');
+        var row = $('<th><spring:message code="ProductCode" text="Код товара"/></th><th><spring:message code="ProductTitle" text="Название товара"/></th><th><spring:message code="ProductPrice" text="Цена"/></th><th><spring:message code="ProductCount" text="Количество"/></th>' +
+                '<th><spring:message code="YearStatisticsReceipts" text="Выручка"/></th><th><spring:message code="Date" text="Дата"/></th>'
+        );
+        table.append(row);
+
+        var rowData = null;
+        var total = 0;
+        for(var index = 0; index < statistics.length; index++){
+
+            row = $('<tr></tr>');
+
+            rowData = $('<td>' + statistics[index]['hierarchyCode'] + '</td><td>' + statistics[index]['description'] + '</td><td>' + statistics[index]['price'] + '</td><td>'
+            + statistics[index]['quantity'] + '</td><td>' + statistics[index]['receipts'] + '</td><td>' + statistics[index]['date'] + '</td>');
+
+            total = total + statistics[index]['receipts'];
+
+            row.append(rowData);
+            table.append(row);
+        }
+        rowData = $('<td></td><td></td><td></td><td></td><td>' + Math.round(total*100)/100 + '</td>');
+        row = $('<tr></tr>');
+        row.append(rowData);
+        table.append(row);
+        selector.append(table);
+    }
+
 
     $(document).ready(function() {
 
@@ -69,7 +118,8 @@
 
                 row = $('<tr></tr>');
 
-                rowData = $('<td>' + statistics[index]['month'] + '</td><td>' + statistics[index]['receipts'] + '</td><td>');
+                rowData = $('<td><a onclick="getMonthStatistics(' + statistics[index]['month'] + ')">' + statistics[index]['month'] + '</a></td><td>' + statistics[index]['receipts'] + '</td>');
+
                 total = total + statistics[index]['receipts'];
 
                 row.append(rowData);
@@ -131,6 +181,18 @@
 
             <div id="statistics">
 
+
+            </div>
+
+            <div id="month_detailed">
+
+            </div>
+
+            <div id="user_detailed">
+
+            </div>
+
+            <div id="trand_detailed">
 
             </div>
 

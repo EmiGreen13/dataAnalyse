@@ -222,6 +222,16 @@ h6 { font-size: 12px; margin: 0 0 5px; padding: 0; }
 	width: 350px;
 }
 
+#month_detailed{
+	margin: 20px auto 0 auto;
+	width: 800px;
+}
+
+#trand_detailed{
+	margin: 0 auto;
+	width: 350px;
+}
+
 #authPanel{
 	padding: 20px 10px 20px;
 }
