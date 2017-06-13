@@ -4,6 +4,7 @@ package manager;
 import entity.InternalError;
 import entity.Product;
 import entity.ProductToPrice;
+import entity.statistics.SquateTrand;
 import entity.statistics.StatisticsMonth;
 import entity.statistics.StatisticsMonthUser;
 
@@ -121,5 +122,56 @@ public class StatisticsDaoManager implements StatisticsDao {
             outputError.setErrorNumber(exception.hashCode());
         }
         return statisticsMonthsUser;
+    }
+
+    @Override
+    public List<SquateTrand> getSquareTrand(InternalError internalError) {
+
+        List<SquateTrand> squateTrandList = null;
+        SquateTrand squateTrand = null;
+
+        try{
+            CallableStatement call = dataSource.getConnection().prepareCall("{ call dataanalyse.spGetSquareTrand(?,?) }", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+
+            call.registerOutParameter(1, Types.INTEGER);
+            call.registerOutParameter(2, Types.NVARCHAR);
+
+            Boolean result = call.execute();
+
+            if (result){
+                //Prepare result set
+                ResultSet resultSet = call.getResultSet();
+                //row count
+                resultSet.last();
+                int count = resultSet.getRow();
+                resultSet.beforeFirst();
+
+                squateTrandList = new ArrayList<>(count);
+
+                while (resultSet.next()) {
+                    squateTrand = new SquateTrand(resultSet.getInt(1), resultSet.getDouble(2), resultSet.getDouble(3));
+                    squateTrandList.add(squateTrand);
+                }
+            }
+            //Output parameters
+            Integer error = call.getInt(1);
+            String errorMessage = call.getString(2);
+
+            //Set error variables
+            internalError.setErrorNumber(error);
+            internalError.setErrorMessage(errorMessage);
+
+            //if error occurs
+            if (error != 0){
+                squateTrandList = null;
+            }
+
+        }
+        catch (Exception exception){
+            squateTrandList = null;
+            internalError.setErrorMessage(exception.getLocalizedMessage());
+            internalError.setErrorNumber(exception.hashCode());
+        }
+        return squateTrandList;
     }
 }

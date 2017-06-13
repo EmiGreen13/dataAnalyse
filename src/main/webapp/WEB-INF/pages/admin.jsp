@@ -100,7 +100,45 @@
                 return false;
             }
         });
+
+        $.ajax({
+            type: 'GET',
+            url: 'get_square_trand',
+            // data: {'id': id, 'first': first, 'last': last},
+            dataType: 'json',
+            success: function (result) {
+                setYearStatisticsTrand(result);
+            },
+            error: function (msg) {
+                var error = JSON.parse(msg.responseText);
+                alert(error);
+                return false;
+            }
+        });
+
     });
+
+    function setYearStatisticsTrand(statistics) {
+
+        var selector = $("#trand_detailed");
+        selector.empty();
+
+        var table = $('<table></table>').addClass('table_blur');
+        var row = $('<th>Месяц</th><th>Выручка</th><th>Скользящая средняя</th>');
+        table.append(row);
+
+        var rowData = null;
+        for(var index = 0; index < statistics.length; index++){
+
+            row = $('<tr></tr>');
+
+            rowData = $('<td>' + statistics[index]['month'] + '</td><td>' + statistics[index]['receipts'] + '</td><td>' + statistics[index]['avg'] + '</td>');
+
+            row.append(rowData);
+            table.append(row);
+        }
+        selector.append(table);
+    }
 
     function setYearStatisticsPerMonth(statistics) {
 
